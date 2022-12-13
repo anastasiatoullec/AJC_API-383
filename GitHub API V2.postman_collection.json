@@ -1,0 +1,669 @@
+{
+	"info": {
+		"_postman_id": "dcac9bbb-f501-4ca8-bf90-794aa864ef44",
+		"name": "GitHub API V2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24836245"
+	},
+	"item": [
+		{
+			"name": "ManageRepositories",
+			"item": [
+				{
+					"name": "List repositories for a user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].value).to.eql(\"web-driver-selenium-python\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/users/:USERNAME/repos?direction=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								":USERNAME",
+								"repos"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "owner",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "updated",
+									"disabled": true
+								},
+								{
+									"key": "direction",
+									"value": ""
+								}
+							],
+							"variable": [
+								{
+									"key": "USERNAME",
+									"value": "anastasiatoullec"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "creation d'un utilisateur qui existe",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"La creation d'une repositorie qui existe deja ne s'effectue pas\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.errors[0].message).to.eql(\"name already exists on this account\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "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",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"name\": \"2d Post\",\r\n\"description\": \"This is your 2d repo!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/repos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"repos"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "owner",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "updated",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a new repository for the authenticated user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var repositoryName = \"AJC_API-\" + pm.variables.replaceIn('{{$randomInt}}')\r",
+									"\r",
+									"pm.collectionVariables.set(\"RepoName\", repositoryName);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "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",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"name\": \"{{RepoName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/repos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"repos"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "owner",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "updated",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Your test name\", function (){\r",
+									"pm.expect(jsonData.results[0].name).to.eql(\"Create a new user\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "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",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"name\": \"{{RepoName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/repos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"repos"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "owner",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "updated",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a new repositorie for the auth user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(pm.variables.get(\"RepoName\"));\r",
+									"});\r",
+									"\r",
+									"var jsondata = JSON.parse(responseBody);\r",
+									"\r",
+									"console.log(jsondata);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var randomRepo = \"AJC\"+ pm.variables.replaceIn('{{$randomInt}}');\r",
+									"\r",
+									"pm.collectionVariables.set(\"RepoName\",randomRepo);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "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",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"name\": \"{{RepoName}}\",\r\n\"private\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/repos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"repos"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "owner",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "updated",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List repositories for not existing user",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.github.com/users/Tcb/repos",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"users",
+								"Tcb",
+								"repos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List repositories for not existing user Copy",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.github.com/users/Tcb/repos",
+							"protocol": "https",
+							"host": [
+								"api",
+								"github",
+								"com"
+							],
+							"path": [
+								"users",
+								"Tcb",
+								"repos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update repository name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"On change la privacy\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.private).to.eql(false);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "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",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"private\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/repos/:owner/:repo",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"repos",
+								":owner",
+								":repo"
+							],
+							"variable": [
+								{
+									"key": "owner",
+									"value": "anastasiatoullec"
+								},
+								{
+									"key": "repo",
+									"value": "{{RepoName}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete repositorie",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "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",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/repos/:owner/:repo",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"repos",
+								":owner",
+								":repo"
+							],
+							"variable": [
+								{
+									"key": "owner",
+									"value": "anastasiatoullec"
+								},
+								{
+									"key": "repo",
+									"value": "{{RepoName}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List repositories after delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that repo has been deleted\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.not.eql(AJC418);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "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",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.github+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/repos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"repos"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "owner",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "updated",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "RepoName",
+			"value": ""
+		}
+	]
+}
